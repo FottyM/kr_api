@@ -11,8 +11,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      render json: { id: @user.id, first_name: @user.first_name,
-                     last_name: @user.last_name, email: @user.email },
+      render json: { id: @user.id },
              status: :created,
              location: @user
     else
@@ -47,6 +46,8 @@ class UsersController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_user
     @user = User.find(params[:id])
+    @user = { id: @user.id, first_name: @user.first_name,
+              last_name: @user.last_name, email: @user.email }
   end
 
   # Only allow a trusted parameter "white list" through.
@@ -56,14 +57,12 @@ class UsersController < ApplicationController
 
   #  Only these two params when a user wants to authenticate
   def auth_params
-    params.permit(:email, :password)
+    params.require(:user).permit(:email, :password)
   end
 
   # Authenticate with emial and passowrd
   def authenticate(auth_params)
-    # byebug
-    command = AuthenticateUser.call(auth_params['email'], auth_params['password'])
-
+    command = AuthenticateUser.call(auth_params[:email], auth_params[:password])
     if command.success?
       render json: {
         access_token: command.result,
