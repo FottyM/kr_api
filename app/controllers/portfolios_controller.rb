@@ -1,9 +1,10 @@
 # app/controllers/portfolios_controller.rb
 class PortfoliosController < ApplicationController
-  before_action :set_portfolio
+  before_action :set_portfolio, only: [:edit, :update, :show, :destory]
 
   def index
     @portfolios = current_user.portfolios.all
+    render json: @portfolios, status: :ok
   end
 
   def create
@@ -29,7 +30,12 @@ class PortfoliosController < ApplicationController
   end
 
   def destroy
-    @portfolio.destroy
+    @portfolio = Portfolio.find(params[:id]) if current_user
+    if @portfolio.destroy
+      render json: { message: :deleted }
+    else
+      render json: { error: "Coulnd't delete " }
+    end
   end
 
   private
