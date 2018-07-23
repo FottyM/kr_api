@@ -23,12 +23,6 @@ class UsersController < ApplicationController
     authenticate auth_params
   end
 
-  def test
-    render json: {
-      message: 'You have passed authentication and authorization test'
-    }
-  end
-
   def update
     if @user.update(user_params)
       render json: @user
@@ -37,9 +31,9 @@ class UsersController < ApplicationController
     end
   end
 
-  def destroy
-    @user.destroy
-  end
+  # def destroy
+  #   @user.destroy
+  # end
 
   private
 

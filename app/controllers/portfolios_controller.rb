@@ -1,6 +1,6 @@
 # app/controllers/portfolios_controller.rb
 class PortfoliosController < ApplicationController
-  before_action :set_portfolio, only: [:edit, :update, :show, :destory]
+  before_action :set_portfolio, only: %i[edit update show destory]
 
   def index
     @portfolios = current_user.portfolios.all
@@ -11,7 +11,7 @@ class PortfoliosController < ApplicationController
     @portfolio = current_user.portfolios.new(portfolio_params)
 
     if @portfolio.save
-      render json: @portfolio, status: :created
+      render json: { message: 'Portfolio created successfully' }, status: :created
     else
       render json: @portfolio.errors, status: :unprocessable_entity
     end
